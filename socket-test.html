@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>EventPulse Socket Test</title>
+</head>
+<body>
+
+  <h2>EventPulse Socket Test</h2>
+
+  <p id="status">Connecting...</p>
+
+  <button onclick="joinEvent()">
+    Join Event
+  </button>
+
+  <div id="messages"></div>
+
+  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+
+  <script>
+    const socket = io('http://localhost:3000');
+
+    const eventId = '6a83424d846f2b8aa0b901b8';
+
+    socket.on('connect', () => {
+      document.getElementById('status').innerText =
+        'Connected: ' + socket.id;
+
+      console.log('Connected:', socket.id);
+    });
+
+    function joinEvent() {
+      socket.emit('join-event', eventId);
+
+      document.getElementById('status').innerText =
+        'Joined event room';
+
+      console.log('Joined event:', eventId);
+    }
+
+    socket.on('announcement', (message) => {
+      console.log('Announcement received:', message);
+
+      const div = document.createElement('div');
+
+      div.innerHTML = `
+        <hr>
+        <strong>New Announcement:</strong>
+        ${message.text}
+      `;
+
+      document.getElementById('messages').appendChild(div);
+    });
+  </script>
+
+</body>
+</html>
