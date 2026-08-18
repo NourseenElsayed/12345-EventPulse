@@ -71,8 +71,10 @@ app.use((req, res) => {
 
 app.use(errorHandler);
 
-module.exports = {
-  app,
-  httpServer,
-  io
-};
+// Make Socket.io server available to server.js
+app.httpServer = httpServer;
+app.io = io;
+app.app = app;
+
+// Export Express app for Vercel
+module.exports = app;
