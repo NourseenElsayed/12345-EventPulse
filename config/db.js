@@ -12,6 +12,11 @@ const connectDB = async () => {
 
     console.log('Attempting MongoDB connection...');
 
+    console.log(
+      'Mongo URI:',
+      process.env.MONGO_URI?.replace(/\/\/.*@/, '//***@')
+    );
+
     await mongoose.connect(process.env.MONGO_URI, {
       serverSelectionTimeoutMS: 10000
     });
