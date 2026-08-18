@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const http = require('http');
 const { Server } = require('socket.io');
 
+const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
@@ -71,10 +72,15 @@ app.use((req, res) => {
 
 app.use(errorHandler);
 
-// Make Socket.io server available to server.js
 app.httpServer = httpServer;
 app.io = io;
 app.app = app;
 
-// Export Express app for Vercel
+// Connect to MongoDB when running on Vercel
+if (process.env.VERCEL) {
+  connectDB().catch((error) => {
+    console.error('MongoDB connection failed:', error.message);
+  });
+}
+
 module.exports = app;
