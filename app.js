@@ -53,14 +53,32 @@ app.use('/api/announcements', announcementsRoutes);
 app.use('/api/categories', categoriesRoutes);
 
 app.get('/health', async (req, res) => {
-  const dbState = mongoose.connection.readyState;
+  try {
+    if (mongoose.connection.readyState !== 1) {
+      await connectDB();
+    }
 
-  res.status(200).json({
-    status: 'ok',
-    environment: process.env.NODE_ENV || 'development',
-    uptime: process.uptime(),
-    database: dbState === 1 ? 'connected' : 'disconnected'
-  });
+    res.status(200).json({
+      status: 'ok',
+      environment: process.env.NODE_ENV || 'development',
+      uptime: process.uptime(),
+      database:
+        mongoose.connection.readyState === 1
+          ? 'connected'
+          : 'disconnected'
+    });
+  } catch (error) {
+    console.error(
+      'Health check database connection failed:',
+      error.message
+    );
+
+    res.status(503).json({
+      status: 'error',
+      environment: process.env.NODE_ENV || 'development',
+      database: 'disconnected'
+    });
+  }
 });
 
 app.use((req, res) => {
