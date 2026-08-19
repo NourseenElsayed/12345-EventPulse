@@ -9,6 +9,12 @@ const { Server } = require('socket.io');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errorHandler');
 
+const eventsRoutes = require('./routes/events.routes');
+const registrationsRoutes = require('./routes/registrations.routes');
+const authRoutes = require('./routes/auth.routes');
+const announcementsRoutes = require('./routes/announcements.routes');
+const categoriesRoutes = require('./routes/categories.routes');
+
 const app = express();
 
 app.use(morgan('dev'));
@@ -40,11 +46,33 @@ io.on('connection', (socket) => {
   });
 });
 
-const eventsRoutes = require('./routes/events.routes');
-const registrationsRoutes = require('./routes/registrations.routes');
-const authRoutes = require('./routes/auth.routes');
-const announcementsRoutes = require('./routes/announcements.routes');
-const categoriesRoutes = require('./routes/categories.routes');
+// =========================
+// Database Middleware
+// =========================
+
+app.use(async (req, res, next) => {
+  try {
+    if (mongoose.connection.readyState !== 1) {
+      await connectDB();
+    }
+
+    next();
+  } catch (error) {
+    console.error(
+      'MongoDB connection failed:',
+      error.message
+    );
+
+    return res.status(503).json({
+      status: 'error',
+      message: 'Database connection failed'
+    });
+  }
+});
+
+// =========================
+// Routes
+// =========================
 
 app.use('/api/events', eventsRoutes);
 app.use('/api/registrations', registrationsRoutes);
@@ -52,34 +80,25 @@ app.use('/api/auth', authRoutes);
 app.use('/api/announcements', announcementsRoutes);
 app.use('/api/categories', categoriesRoutes);
 
-app.get('/health', async (req, res) => {
-  try {
-    if (mongoose.connection.readyState !== 1) {
-      await connectDB();
-    }
+// =========================
+// Health Check
+// =========================
 
-    res.status(200).json({
-      status: 'ok',
-      environment: process.env.NODE_ENV || 'development',
-      uptime: process.uptime(),
-      database:
-        mongoose.connection.readyState === 1
-          ? 'connected'
-          : 'disconnected'
-    });
-  } catch (error) {
-    console.error(
-      'Health check database connection failed:',
-      error.message
-    );
-
-    res.status(503).json({
-      status: 'error',
-      environment: process.env.NODE_ENV || 'development',
-      database: 'disconnected'
-    });
-  }
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    environment: process.env.NODE_ENV || 'development',
+    uptime: process.uptime(),
+    database:
+      mongoose.connection.readyState === 1
+        ? 'connected'
+        : 'disconnected'
+  });
 });
+
+// =========================
+// 404
+// =========================
 
 app.use((req, res) => {
   res.status(404).json({
@@ -88,17 +107,18 @@ app.use((req, res) => {
   });
 });
 
+// =========================
+// Error Handler
+// =========================
+
 app.use(errorHandler);
+
+// =========================
+// Exports
+// =========================
 
 app.httpServer = httpServer;
 app.io = io;
 app.app = app;
-
-// Connect to MongoDB when running on Vercel
-if (process.env.VERCEL) {
-  connectDB().catch((error) => {
-    console.error('MongoDB connection failed:', error.message);
-  });
-}
 
 module.exports = app;
