@@ -5,7 +5,6 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const http = require('http');
 const { Server } = require('socket.io');
-const path = require('path');
 
 const swaggerSpec = require('./config/swagger');
 const swaggerUiDist = require('swagger-ui-dist');
