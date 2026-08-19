@@ -33,7 +33,9 @@ const swaggerUiPath = swaggerUiDist.getAbsoluteFSPath();
 // Serve Swagger UI static files
 app.use(
   '/api-docs',
-  express.static(swaggerUiPath)
+  express.static(swaggerUiPath, {
+    index: false
+  })
 );
 
 // Swagger UI initialization
