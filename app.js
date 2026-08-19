@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const http = require('http');
 const { Server } = require('socket.io');
+const fs = require('fs');
+const path = require('path');
 
 const swaggerSpec = require('./config/swagger');
 const swaggerUiDist = require('swagger-ui-dist');
@@ -29,13 +31,27 @@ app.use(express.json());
 
 const swaggerUiPath = swaggerUiDist.getAbsoluteFSPath();
 
-// Serve Swagger UI static files
-app.use(
-  '/api-docs',
-  express.static(swaggerUiPath, {
-    index: false
-  })
-);
+const swaggerAssets = {
+  'swagger-ui.css': 'text/css',
+  'swagger-ui-bundle.js': 'application/javascript',
+  'swagger-ui-standalone-preset.js': 'application/javascript',
+  'favicon-32x32.png': 'image/png',
+  'favicon-16x16.png': 'image/png'
+};
+
+// Serve Swagger UI assets explicitly
+Object.entries(swaggerAssets).forEach(([file, contentType]) => {
+  app.get(`/api-docs/${file}`, (req, res) => {
+    const filePath = path.join(swaggerUiPath, file);
+
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).send('Swagger asset not found');
+    }
+
+    res.type(contentType);
+    res.sendFile(filePath);
+  });
+});
 
 // Swagger UI initialization
 app.get('/api-docs/swagger-ui-init.js', (req, res) => {
@@ -91,7 +107,7 @@ app.get('/api-docs/', (req, res) => {
     rel="icon"
     type="image/png"
     href="/api-docs/favicon-16x16.png"
-    sizes="16x16"
+    sizes="32x32"
   >
 
   <style>
