@@ -5,11 +5,8 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const http = require('http');
 const { Server } = require('socket.io');
-const fs = require('fs');
-const path = require('path');
 
 const swaggerSpec = require('./config/swagger');
-const swaggerUiDist = require('swagger-ui-dist');
 
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errorHandler');
@@ -26,57 +23,15 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 // =========================
+// Static Files
+// =========================
+
+app.use('/swagger-assets', express.static('public/swagger'));
+
+// =========================
 // Swagger API Documentation
 // =========================
 
-const swaggerUiPath = swaggerUiDist.getAbsoluteFSPath();
-
-const swaggerAssets = {
-  'swagger-ui.css': 'text/css',
-  'swagger-ui-bundle.js': 'application/javascript',
-  'swagger-ui-standalone-preset.js': 'application/javascript',
-  'favicon-32x32.png': 'image/png',
-  'favicon-16x16.png': 'image/png'
-};
-
-// Serve Swagger UI assets explicitly
-Object.entries(swaggerAssets).forEach(([file, contentType]) => {
-  app.get(`/api-docs/${file}`, (req, res) => {
-    const filePath = path.join(swaggerUiPath, file);
-
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).send('Swagger asset not found');
-    }
-
-    res.type(contentType);
-    res.sendFile(filePath);
-  });
-});
-
-// Swagger UI initialization
-app.get('/api-docs/swagger-ui-init.js', (req, res) => {
-  res.type('application/javascript');
-
-  res.send(`
-    window.onload = function() {
-      window.ui = SwaggerUIBundle({
-        spec: ${JSON.stringify(swaggerSpec)},
-        dom_id: '#swagger-ui',
-        deepLinking: true,
-        presets: [
-          SwaggerUIBundle.presets.apis,
-          SwaggerUIStandalonePreset
-        ],
-        plugins: [
-          SwaggerUIBundle.plugins.DownloadUrl
-        ],
-        layout: "StandaloneLayout"
-      });
-    };
-  `);
-});
-
-// Swagger UI page
 app.get('/api-docs', (req, res) => {
   res.redirect('/api-docs/');
 });
@@ -93,20 +48,13 @@ app.get('/api-docs/', (req, res) => {
   <link
     rel="stylesheet"
     type="text/css"
-    href="/api-docs/swagger-ui.css"
+    href="/swagger-assets/swagger-ui.css"
   >
 
   <link
     rel="icon"
     type="image/png"
-    href="/api-docs/favicon-32x32.png"
-    sizes="32x32"
-  >
-
-  <link
-    rel="icon"
-    type="image/png"
-    href="/api-docs/favicon-16x16.png"
+    href="/swagger-assets/favicon-32x32.png"
     sizes="32x32"
   >
 
@@ -133,9 +81,26 @@ app.get('/api-docs/', (req, res) => {
 
   <div id="swagger-ui"></div>
 
-  <script src="/api-docs/swagger-ui-bundle.js"></script>
-  <script src="/api-docs/swagger-ui-standalone-preset.js"></script>
-  <script src="/api-docs/swagger-ui-init.js"></script>
+  <script src="/swagger-assets/swagger-ui-bundle.js"></script>
+  <script src="/swagger-assets/swagger-ui-standalone-preset.js"></script>
+
+  <script>
+    window.onload = function() {
+      window.ui = SwaggerUIBundle({
+        spec: ${JSON.stringify(swaggerSpec)},
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIStandalonePreset
+        ],
+        plugins: [
+          SwaggerUIBundle.plugins.DownloadUrl
+        ],
+        layout: "StandaloneLayout"
+      });
+    };
+  </script>
 
 </body>
 </html>
