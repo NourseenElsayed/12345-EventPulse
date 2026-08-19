@@ -5,8 +5,6 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const http = require('http');
 const { Server } = require('socket.io');
-const path = require('path');
-const fs = require('fs');
 
 const swaggerSpec = require('./config/swagger');
 const swaggerUiDist = require('swagger-ui-dist');
@@ -31,32 +29,12 @@ app.use(express.json());
 
 const swaggerUiPath = swaggerUiDist.getAbsoluteFSPath();
 
-const swaggerAssets = [
-  'swagger-ui-bundle.js',
-  'swagger-ui-standalone-preset.js',
-  'swagger-ui.css',
-  'favicon-32x32.png',
-  'favicon-16x16.png'
-];
+app.use(
+  '/swagger-assets',
+  express.static(swaggerUiPath)
+);
 
-swaggerAssets.forEach((file) => {
-  app.get(`/swagger-assets/${file}`, (req, res) => {
-    const filePath = path.join(swaggerUiPath, file);
-
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).send('Swagger asset not found');
-    }
-
-    res.sendFile(filePath);
-  });
-});
-
-app.get('/api-docs', (req, res) => {
-  res.redirect('/api-docs/');
-});
-
-app.get('/api-docs/', (req, res) => {
-  res.send(`
+const swaggerHtml = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -106,7 +84,14 @@ app.get('/api-docs/', (req, res) => {
 
 </body>
 </html>
-  `);
+`;
+
+app.get('/api-docs', (req, res) => {
+  res.type('html').send(swaggerHtml);
+});
+
+app.get('/api-docs/', (req, res) => {
+  res.type('html').send(swaggerHtml);
 });
 
 app.get('/api-docs/swagger-ui-init.js', (req, res) => {
