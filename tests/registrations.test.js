@@ -1,6 +1,8 @@
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
 
+jest.mock('../config/db', () => jest.fn().mockResolvedValue(true));
+
 jest.mock('../models/registration.model', () => {
   const mockRegistration = {
     _id: '507f1f77bcf86cd799439013',

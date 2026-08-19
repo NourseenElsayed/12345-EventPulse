@@ -17,7 +17,7 @@ const options = {
         description: 'Local development server'
       },
       {
-        url: 'https://12345-event-pulse-z3el-k10jo4bie-nourseen.vercel.app',
+        url: 'https://12345-event-pulse-z3el.vercel.app',
         description: 'Production server'
       }
     ],
@@ -210,10 +210,6 @@ const options = {
     },
 
     paths: {
-      // =========================
-      // AUTH
-      // =========================
-
       '/api/auth/register': {
         post: {
           tags: ['Auth'],
@@ -263,10 +259,6 @@ const options = {
           }
         }
       },
-
-      // =========================
-      // EVENTS
-      // =========================
 
       '/api/events': {
         get: {
@@ -408,10 +400,6 @@ const options = {
         }
       },
 
-      // =========================
-      // REGISTRATIONS
-      // =========================
-
       '/api/registrations': {
         post: {
           tags: ['Registrations'],
@@ -487,10 +475,6 @@ const options = {
         }
       },
 
-      // =========================
-      // ANNOUNCEMENTS
-      // =========================
-
       '/api/announcements': {
         post: {
           tags: ['Announcements'],
@@ -548,10 +532,6 @@ const options = {
           }
         }
       },
-
-      // =========================
-      // CATEGORIES
-      // =========================
 
       '/api/categories': {
         get: {
