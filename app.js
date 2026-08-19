@@ -23,12 +23,6 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 // =========================
-// Static Files
-// =========================
-
-app.use('/swagger-assets', express.static('public/swagger'));
-
-// =========================
 // Swagger API Documentation
 // =========================
 
@@ -47,15 +41,7 @@ app.get('/api-docs/', (req, res) => {
 
   <link
     rel="stylesheet"
-    type="text/css"
-    href="/swagger-assets/swagger-ui.css"
-  >
-
-  <link
-    rel="icon"
-    type="image/png"
-    href="/swagger-assets/favicon-32x32.png"
-    sizes="32x32"
+    href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css"
   >
 
   <style>
@@ -81,11 +67,11 @@ app.get('/api-docs/', (req, res) => {
 
   <div id="swagger-ui"></div>
 
-  <script src="/swagger-assets/swagger-ui-bundle.js"></script>
-  <script src="/swagger-assets/swagger-ui-standalone-preset.js"></script>
+  <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+  <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-standalone-preset.js"></script>
 
   <script>
-    window.onload = function() {
+    window.onload = function () {
       window.ui = SwaggerUIBundle({
         spec: ${JSON.stringify(swaggerSpec)},
         dom_id: '#swagger-ui',
@@ -97,7 +83,7 @@ app.get('/api-docs/', (req, res) => {
         plugins: [
           SwaggerUIBundle.plugins.DownloadUrl
         ],
-        layout: "StandaloneLayout"
+        layout: 'StandaloneLayout'
       });
     };
   </script>
