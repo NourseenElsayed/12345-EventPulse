@@ -5,8 +5,11 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const http = require('http');
 const { Server } = require('socket.io');
+const path = require('path');
+const fs = require('fs');
 
 const swaggerSpec = require('./config/swagger');
+const swaggerUiDist = require('swagger-ui-dist');
 
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errorHandler');
@@ -26,6 +29,28 @@ app.use(express.json());
 // Swagger API Documentation
 // =========================
 
+const swaggerUiPath = swaggerUiDist.getAbsoluteFSPath();
+
+const swaggerAssets = [
+  'swagger-ui-bundle.js',
+  'swagger-ui-standalone-preset.js',
+  'swagger-ui.css',
+  'favicon-32x32.png',
+  'favicon-16x16.png'
+];
+
+swaggerAssets.forEach((file) => {
+  app.get(`/swagger-assets/${file}`, (req, res) => {
+    const filePath = path.join(swaggerUiPath, file);
+
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).send('Swagger asset not found');
+    }
+
+    res.sendFile(filePath);
+  });
+});
+
 app.get('/api-docs', (req, res) => {
   res.redirect('/api-docs/');
 });
@@ -41,7 +66,15 @@ app.get('/api-docs/', (req, res) => {
 
   <link
     rel="stylesheet"
-    href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css"
+    type="text/css"
+    href="/swagger-assets/swagger-ui.css"
+  >
+
+  <link
+    rel="icon"
+    type="image/png"
+    href="/swagger-assets/favicon-32x32.png"
+    sizes="32x32"
   >
 
   <style>
@@ -67,11 +100,20 @@ app.get('/api-docs/', (req, res) => {
 
   <div id="swagger-ui"></div>
 
-  <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
-  <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-standalone-preset.js"></script>
+  <script src="/swagger-assets/swagger-ui-bundle.js"></script>
+  <script src="/swagger-assets/swagger-ui-standalone-preset.js"></script>
+  <script src="/api-docs/swagger-ui-init.js"></script>
 
-  <script>
-    window.onload = function () {
+</body>
+</html>
+  `);
+});
+
+app.get('/api-docs/swagger-ui-init.js', (req, res) => {
+  res.type('application/javascript');
+
+  res.send(`
+    window.onload = function() {
       window.ui = SwaggerUIBundle({
         spec: ${JSON.stringify(swaggerSpec)},
         dom_id: '#swagger-ui',
@@ -86,10 +128,6 @@ app.get('/api-docs/', (req, res) => {
         layout: 'StandaloneLayout'
       });
     };
-  </script>
-
-</body>
-</html>
   `);
 });
 
