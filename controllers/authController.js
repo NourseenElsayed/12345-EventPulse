@@ -1,4 +1,3 @@
-```javascript
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -7,70 +6,12 @@ const AppError = require('../utils/AppError');
 const asyncHandler = require('../utils/asyncHandler');
 
 // =========================
-// Create JWT
-// =========================
-const createToken = (user) => {
-  return jwt.sign(
-    {
-      userId: user._id.toString(),
-      id: user._id.toString(),
-      role: user.role
-    },
-    process.env.JWT_SECRET,
-    {
-      expiresIn: process.env.JWT_EXPIRES_IN || '7d'
-    }
-  );
-};
-
-// =========================
-// Bootstrap Admin
-// =========================
-// Creates the admin account automatically if it does not exist.
-// Credentials are taken from Vercel Environment Variables.
-const ensureAdminExists = async () => {
-  const adminEmail = process.env.ADMIN_EMAIL;
-  const adminPassword = process.env.ADMIN_PASSWORD;
-
-  if (!adminEmail || !adminPassword) {
-    return;
-  }
-
-  const normalizedEmail = adminEmail.toLowerCase().trim();
-
-  let admin = await User.findOne({ email: normalizedEmail }).select(
-    '+password'
-  );
-
-  if (!admin) {
-    const hashedPassword = await bcrypt.hash(adminPassword, 12);
-
-    admin = await User.create({
-      name: 'Nourseen',
-      email: normalizedEmail,
-      password: hashedPassword,
-      role: 'admin'
-    });
-
-    console.log('Admin account created successfully:', normalizedEmail);
-  }
-
-  return admin;
-};
-
-// =========================
 // Register
 // =========================
 exports.register = asyncHandler(async (req, res, next) => {
   const { name, email, password } = req.body;
 
-  if (!name || !email || !password) {
-    return next(
-      new AppError('Name, email and password are required', 400)
-    );
-  }
-
-  const normalizedEmail = email.toLowerCase().trim();
+  const normalizedEmail = email.trim().toLowerCase();
 
   const existingUser = await User.findOne({
     email: normalizedEmail
@@ -89,7 +30,17 @@ exports.register = asyncHandler(async (req, res, next) => {
     role: 'attendee'
   });
 
-  const token = createToken(user);
+  const token = jwt.sign(
+    {
+      userId: user._id.toString(),
+      id: user._id.toString(),
+      role: user.role
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_EXPIRES_IN || '7d'
+    }
+  );
 
   res.status(201).json({
     status: 'success',
@@ -115,10 +66,7 @@ exports.login = asyncHandler(async (req, res, next) => {
     );
   }
 
-  const normalizedEmail = email.toLowerCase().trim();
-
-  // Make sure the configured admin exists
-  await ensureAdminExists();
+  const normalizedEmail = email.trim().toLowerCase();
 
   const user = await User.findOne({
     email: normalizedEmail
@@ -128,13 +76,26 @@ exports.login = asyncHandler(async (req, res, next) => {
     return next(new AppError('Invalid email or password', 401));
   }
 
-  const isMatch = await bcrypt.compare(password, user.password);
+  const isMatch = await bcrypt.compare(
+    password,
+    user.password
+  );
 
   if (!isMatch) {
     return next(new AppError('Invalid email or password', 401));
   }
 
-  const token = createToken(user);
+  const token = jwt.sign(
+    {
+      userId: user._id.toString(),
+      id: user._id.toString(),
+      role: user.role
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_EXPIRES_IN || '7d'
+    }
+  );
 
   res.status(200).json({
     status: 'success',
@@ -147,4 +108,3 @@ exports.login = asyncHandler(async (req, res, next) => {
     }
   });
 });
-```
