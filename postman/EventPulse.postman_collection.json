@@ -1,0 +1,818 @@
+{
+  "info": {
+    "_postman_id": "bbd47b58-84cd-42ef-9f30-2751e9331302",
+    "name": "EventPulse",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "56505950",
+    "_collection_link": "https://go.postman.co/collection/56505950-bbd47b58-84cd-42ef-9f30-2751e9331302?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Nourseen\",\r\n  \"email\": \"nourseen2026@test.com\",\r\n  \"password\": \"NourseenAdmin123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://12345-event-pulse-sh8f.vercel.app/api/auth/register",
+              "protocol": "https",
+              "host": [
+                "12345-event-pulse-sh8f",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"nourseen2026@test.com\",\r\n  \"password\": \"NourseenAdmin123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://12345-event-pulse-sh8f.vercel.app/api/auth/login",
+              "protocol": "https",
+              "host": [
+                "12345-event-pulse-sh8f",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Admin Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"nourseen2026@test.com\",\r\n  \"password\": \"NourseenAdmin123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://12345-event-pulse-sh8f.vercel.app/api/auth/login",
+              "protocol": "https",
+              "host": [
+                "12345-event-pulse-sh8f",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Events",
+      "item": [
+        {
+          "name": "Date Range",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://12345-event-pulse-sh8f.vercel.app/api/events?startDate=2026-09-01&endDate=2026-09-30",
+              "protocol": "https",
+              "host": [
+                "12345-event-pulse-sh8f",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "events"
+              ],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2026-09-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-09-30"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Create Event",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_17hd}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"EventPulse Testing Workshop\",\r\n  \"description\": \"Testing event creation through the EventPulse API.\",\r\n  \"category\": \"6a82190b6bc39066f865696f\",\r\n  \"date\": \"2026-11-15T10:00:00.000Z\",\r\n  \"city\": \"Cairo\",\r\n  \"venue\": \"EventPulse Hub\",\r\n  \"capacity\": 50\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://12345-event-pulse-sh8f.vercel.app/api/events",
+              "protocol": "https",
+              "host": [
+                "12345-event-pulse-sh8f",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "events"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET All Events",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{supabase_service_role_api_key_17hd}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://12345-event-pulse-sh8f.vercel.app/api/events/",
+              "protocol": "https",
+              "host": [
+                "12345-event-pulse-sh8f",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "events",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Event",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_17hd}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"Updated EventPulse Workshop\",\r\n  \"description\": \"Updated description for the EventPulse workshop.\",\r\n  \"capacity\": 100\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://12345-event-pulse-sh8f.vercel.app/api/events/6a85dc89bd9f200c0dd0c4e9",
+              "protocol": "https",
+              "host": [
+                "12345-event-pulse-sh8f",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "events",
+                "6a85dc89bd9f200c0dd0c4e9"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Single Event",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://12345-event-pulse-sh8f.vercel.app/api/events/6a85dc89bd9f200c0dd0c4e9",
+              "protocol": "https",
+              "host": [
+                "12345-event-pulse-sh8f",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "events",
+                "6a85dc89bd9f200c0dd0c4e9"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Event",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{supabase_service_role_api_key_17hd}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "https://12345-event-pulse-sh8f.vercel.app/api/events/6a85dc89bd9f200c0dd0c4e9",
+              "protocol": "https",
+              "host": [
+                "12345-event-pulse-sh8f",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "events",
+                "6a85dc89bd9f200c0dd0c4e9"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sorting",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://12345-event-pulse-sh8f.vercel.app/api/events?sortBy=date&order=desc",
+              "protocol": "https",
+              "host": [
+                "12345-event-pulse-sh8f",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "events"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "date"
+                },
+                {
+                  "key": "order",
+                  "value": "desc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search + Filter",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://12345-event-pulse-sh8f.vercel.app/api/events?search=developers&city=Cairo",
+              "protocol": "https",
+              "host": [
+                "12345-event-pulse-sh8f",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "events"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "developers"
+                },
+                {
+                  "key": "city",
+                  "value": "Cairo"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Text Search",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://12345-event-pulse-sh8f.vercel.app/api/events?search=WORKSHOP",
+              "protocol": "https",
+              "host": [
+                "12345-event-pulse-sh8f",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "events"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "WORKSHOP"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Category Filtering",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://12345-event-pulse-sh8f.vercel.app/api/events?category=6a82190b6bc39066f865696b",
+              "protocol": "https",
+              "host": [
+                "12345-event-pulse-sh8f",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "events"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "6a82190b6bc39066f865696b"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sorting ASC",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://12345-event-pulse-sh8f.vercel.app/api/events?sortBy=date&order=asc",
+              "protocol": "https",
+              "host": [
+                "12345-event-pulse-sh8f",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "events"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "date"
+                },
+                {
+                  "key": "order",
+                  "value": "asc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtering",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://12345-event-pulse-sh8f.vercel.app/api/events?city=Cairo",
+              "protocol": "https",
+              "host": [
+                "12345-event-pulse-sh8f",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "events"
+              ],
+              "query": [
+                {
+                  "key": "city",
+                  "value": "Cairo"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pagination",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://12345-event-pulse-sh8f.vercel.app/api/events?page=1&limit=2",
+              "protocol": "https",
+              "host": [
+                "12345-event-pulse-sh8f",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "events"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pagination Page 2",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://12345-event-pulse-sh8f.vercel.app/api/events?page=2&limit=2",
+              "protocol": "https",
+              "host": [
+                "12345-event-pulse-sh8f",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "events"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "2"
+                },
+                {
+                  "key": "limit",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Announcements",
+      "item": [
+        {
+          "name": "Announcement History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://12345-event-pulse-sh8f.vercel.app/api/announcements/6a85ddafbd9f200c0dd0c50f",
+              "protocol": "https",
+              "host": [
+                "12345-event-pulse-sh8f",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "announcements",
+                "6a85ddafbd9f200c0dd0c50f"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Announcement",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{supabase_service_role_api_key_05zl}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"eventId\": \"6a85ddafbd9f200c0dd0c50f\",\r\n  \"text\": \"This is a real-time announcement!\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://12345-event-pulse-sh8f.vercel.app/api/announcements",
+              "protocol": "https",
+              "host": [
+                "12345-event-pulse-sh8f",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "announcements"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Announcement",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_16sd}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"eventId\": \"6a85ddafbd9f200c0dd0c50f\",\r\n  \"text\": \"Important announcement for this event\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://12345-event-pulse-sh8f.vercel.app/api/announcements",
+              "protocol": "https",
+              "host": [
+                "12345-event-pulse-sh8f",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "announcements"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Announcements",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://12345-event-pulse-sh8f.vercel.app/api/announcements/6a85ddafbd9f200c0dd0c50f",
+              "protocol": "https",
+              "host": [
+                "12345-event-pulse-sh8f",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "announcements",
+                "6a85ddafbd9f200c0dd0c50f"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Registrations",
+      "item": [
+        {
+          "name": "Register For Event",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{supabase_service_role_api_key_16sd}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"eventId\": \"6a85ddafbd9f200c0dd0c50f\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://12345-event-pulse-sh8f.vercel.app/api/registrations/",
+              "protocol": "https",
+              "host": [
+                "12345-event-pulse-sh8f",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "registrations",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Registrations",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{supabase_service_role_api_key_16sd}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://12345-event-pulse-sh8f.vercel.app/api/registrations/my",
+              "protocol": "https",
+              "host": [
+                "12345-event-pulse-sh8f",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "registrations",
+                "my"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Registration",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_16sd}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/registrations/6a836d48f62c20573dc0de39",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "registrations",
+                "6a836d48f62c20573dc0de39"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "json_web_token_17hd",
+      "secret": true
+    },
+    {
+      "key": "auth_secret_17hd",
+      "secret": true
+    },
+    {
+      "key": "supabase_service_role_api_key_17hd",
+      "secret": true
+    },
+    {
+      "key": "supabase_service_role_api_key_05zl",
+      "secret": true
+    },
+    {
+      "key": "supabase_service_role_api_key_16sd",
+      "secret": true
+    },
+    {
+      "key": "json_web_token_16sd",
+      "secret": true
+    }
+  ]
+}

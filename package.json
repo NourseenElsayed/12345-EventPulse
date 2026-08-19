@@ -4,11 +4,11 @@
   "description": "EventPulse Backend API",
   "main": "server.js",
   "scripts": {
-  "start": "node server.js",
-  "dev": "node --watch server.js",
-  "test": "jest --runInBand",
-  "seed": "node seed.js"
-},
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "jest --runInBand",
+    "seed": "node seed.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -21,7 +21,9 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.18.0",
     "morgan": "^1.10.0",
-    "socket.io": "^4.8.3"
+    "socket.io": "^4.8.3",
+    "swagger-jsdoc": "^6.3.0",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "jest": "^30.4.2",
