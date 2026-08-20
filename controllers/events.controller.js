@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 
 const Event = require('../models/event.model');
 const Category = require('../models/category.model');
-const User = require('../models/user.model');
 
 // ===============================
 // GET ALL EVENTS
 // GET /api/events
 // ===============================
+
 exports.getEvents = async (req, res, next) => {
   try {
     const {
@@ -71,7 +71,6 @@ exports.getEvents = async (req, res, next) => {
 
     const pageNum = Math.max(parseInt(page) || 1, 1);
     const limitNum = Math.max(parseInt(limit) || 10, 1);
-
     const skip = (pageNum - 1) * limitNum;
 
     // ===============================
@@ -118,17 +117,16 @@ exports.getEvents = async (req, res, next) => {
       totalPages,
       data
     });
-
   } catch (error) {
     next(error);
   }
 };
 
-
 // ===============================
 // GET SINGLE EVENT
 // GET /api/events/:id
 // ===============================
+
 exports.getEventById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -155,29 +153,19 @@ exports.getEventById = async (req, res, next) => {
       status: 'success',
       data: event
     });
-
   } catch (error) {
     next(error);
   }
 };
 
-
-// ===============================
 // ===============================
 // CREATE EVENT
 // POST /api/events
 // ===============================
+
 exports.createEvent = async (req, res, next) => {
   try {
-    // Get an admin user from the database
-    const organizer = await User.findOne({ role: 'admin' });
-
-    if (!organizer) {
-      return res.status(400).json({
-        status: 'error',
-        message: 'No admin user found'
-      });
-    }
+    const organizer = req.user.userId;
 
     const event = await Event.create({
       title: req.body.title,
@@ -187,7 +175,7 @@ exports.createEvent = async (req, res, next) => {
       city: req.body.city,
       venue: req.body.venue,
       capacity: req.body.capacity,
-      organizer: organizer._id
+      organizer
     });
 
     const populatedEvent = await Event.findById(event._id)
@@ -198,7 +186,6 @@ exports.createEvent = async (req, res, next) => {
       status: 'success',
       data: populatedEvent
     });
-
   } catch (error) {
     next(error);
   }
@@ -208,6 +195,7 @@ exports.createEvent = async (req, res, next) => {
 // UPDATE EVENT
 // PATCH /api/events/:id
 // ===============================
+
 exports.updateEvent = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -241,17 +229,16 @@ exports.updateEvent = async (req, res, next) => {
       status: 'success',
       data: event
     });
-
   } catch (error) {
     next(error);
   }
 };
 
-
 // ===============================
 // DELETE EVENT
 // DELETE /api/events/:id
 // ===============================
+
 exports.deleteEvent = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -276,7 +263,6 @@ exports.deleteEvent = async (req, res, next) => {
       status: 'success',
       message: 'Event deleted successfully'
     });
-
   } catch (error) {
     next(error);
   }
