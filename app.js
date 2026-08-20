@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
+const path = require('path');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const http = require('http');
@@ -28,6 +29,10 @@ app.use(express.json());
 // =========================
 
 const swaggerUiPath = swaggerUiDist.getAbsoluteFSPath();
+
+app.get('/swagger-assets/swagger-ui.css', (req, res) => {
+  res.sendFile(path.join(swaggerUiPath, 'swagger-ui.css'));
+});
 
 app.use(
   '/swagger-assets',
