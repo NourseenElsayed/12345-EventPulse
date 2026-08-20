@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const Event = require('../models/event.model');
-const Category = require('../models/category.model');
+
 
 // ===============================
 // GET ALL EVENTS
@@ -24,6 +24,7 @@ exports.getEvents = async (req, res, next) => {
 
     const filter = {};
 
+    // Filtering
     if (category) {
       filter.category = category;
     }
@@ -44,10 +45,7 @@ exports.getEvents = async (req, res, next) => {
       }
     }
 
-    // ===============================
-    // TEXT SEARCH
-    // ===============================
-
+    // Text search
     if (search) {
       filter.$or = [
         {
@@ -65,22 +63,13 @@ exports.getEvents = async (req, res, next) => {
       ];
     }
 
-    // ===============================
-    // PAGINATION
-    // ===============================
-
-    const pageNum = Math.max(parseInt(page) || 1, 1);
-    const limitNum = Math.max(parseInt(limit) || 10, 1);
+    // Pagination
+    const pageNum = Math.max(parseInt(page, 10) || 1, 1);
+    const limitNum = Math.max(parseInt(limit, 10) || 10, 1);
     const skip = (pageNum - 1) * limitNum;
 
-    // ===============================
-    // SORTING
-    // ===============================
-
-    const allowedSortFields = [
-      'date',
-      'registrations'
-    ];
+    // Sorting
+    const allowedSortFields = ['date', 'registrations'];
 
     const sortField = allowedSortFields.includes(sortBy)
       ? sortBy
@@ -91,10 +80,6 @@ exports.getEvents = async (req, res, next) => {
     const sort = {
       [sortField]: sortDirection
     };
-
-    // ===============================
-    // DATABASE QUERY
-    // ===============================
 
     const [data, total] = await Promise.all([
       Event.find(filter)
@@ -121,6 +106,7 @@ exports.getEvents = async (req, res, next) => {
     next(error);
   }
 };
+
 
 // ===============================
 // GET SINGLE EVENT
@@ -158,6 +144,7 @@ exports.getEventById = async (req, res, next) => {
   }
 };
 
+
 // ===============================
 // CREATE EVENT
 // POST /api/events
@@ -165,8 +152,6 @@ exports.getEventById = async (req, res, next) => {
 
 exports.createEvent = async (req, res, next) => {
   try {
-    const organizer = req.user.userId;
-
     const event = await Event.create({
       title: req.body.title,
       description: req.body.description,
@@ -175,7 +160,7 @@ exports.createEvent = async (req, res, next) => {
       city: req.body.city,
       venue: req.body.venue,
       capacity: req.body.capacity,
-      organizer
+      organizer: req.user.userId
     });
 
     const populatedEvent = await Event.findById(event._id)
@@ -190,6 +175,7 @@ exports.createEvent = async (req, res, next) => {
     next(error);
   }
 };
+
 
 // ===============================
 // UPDATE EVENT
@@ -233,6 +219,7 @@ exports.updateEvent = async (req, res, next) => {
     next(error);
   }
 };
+
 
 // ===============================
 // DELETE EVENT
