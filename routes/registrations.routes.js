@@ -9,7 +9,6 @@ const {
   createRegistrationValidation
 } = require('../middleware/validationRules');
 
-
 // ===============================
 // REGISTER FOR AN EVENT
 // ===============================
@@ -22,7 +21,6 @@ router.post(
   ctrl.registerForEvent
 );
 
-
 // ===============================
 // GET MY REGISTRATIONS
 // ===============================
@@ -33,7 +31,6 @@ router.get(
   ctrl.getMyRegistrations
 );
 
-
 // ===============================
 // CANCEL MY REGISTRATION
 // ===============================
@@ -43,6 +40,5 @@ router.delete(
   requireAuth,
   ctrl.cancelRegistration
 );
-
 
 module.exports = router;
