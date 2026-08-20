@@ -7,7 +7,8 @@ jest.mock('../models/event.model', () => {
     date: new Date('2026-12-01'),
     city: 'Cairo',
     venue: 'Test Venue',
-    capacity: 100
+    capacity: 100,
+    organizer: '507f1f77bcf86cd799439013'
   };
 
   return {
@@ -36,16 +37,8 @@ jest.mock('../models/event.model', () => {
   };
 });
 
-jest.mock('../models/user.model', () => ({
-  findOne: jest.fn().mockResolvedValue({
-    _id: '507f1f77bcf86cd799439013',
-    role: 'admin'
-  })
-}));
-
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
-
 const { app } = require('../app');
 
 describe('Events API Integration Tests', () => {
@@ -63,20 +56,34 @@ describe('Events API Integration Tests', () => {
 
     expect(response.statusCode).toBe(200);
     expect(response.body.status).toBe('success');
+
     expect(response.body).toHaveProperty('data');
+    expect(Array.isArray(response.body.data)).toBe(true);
+
     expect(response.body).toHaveProperty('total');
     expect(response.body).toHaveProperty('page');
     expect(response.body).toHaveProperty('limit');
     expect(response.body).toHaveProperty('totalPages');
   });
 
-  test('GET /api/events/:id should return a specific event', async () => {
+  test('POST /api/events without JWT should return 401 Unauthorized', async () => {
     const response = await request(app)
-      .get('/api/events/507f1f77bcf86cd799439011');
+      .post('/api/events')
+      .send({
+        title: 'Test Event',
+        description: 'Test event description',
+        category: '507f1f77bcf86cd799439012',
+        date: '2026-12-01',
+        city: 'Cairo',
+        venue: 'Test Venue',
+        capacity: 100
+      });
 
-    expect(response.statusCode).toBe(200);
-    expect(response.body.status).toBe('success');
-    expect(response.body.data).toHaveProperty('_id');
+    expect(response.statusCode).toBe(401);
+    expect(response.body.status).toBe('fail');
+    expect(response.body.message).toBe(
+      'You must be logged in to access this route'
+    );
   });
 
   test('POST /api/events should reject invalid data with 422', async () => {
@@ -94,7 +101,10 @@ describe('Events API Integration Tests', () => {
       });
 
     expect(response.statusCode).toBe(422);
+
     expect(response.body).toHaveProperty('errors');
     expect(Array.isArray(response.body.errors)).toBe(true);
+
+    expect(response.body.errors.length).toBeGreaterThan(0);
   });
 });

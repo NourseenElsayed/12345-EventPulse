@@ -1,5 +1,7 @@
 const request = require('supertest');
 
+jest.mock('../config/db', () => jest.fn().mockResolvedValue());
+
 jest.mock('../models/message.model', () => {
   const mockMessage = {
     _id: '507f1f77bcf86cd799439014',
